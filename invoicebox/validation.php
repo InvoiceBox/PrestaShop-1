@@ -58,7 +58,7 @@ $address = new Address($cart->id_address_delivery);
 
 <h3>Оплата через InvoiceBox</h3>
 
-<form action='https://go.invoicebox.ru/module_inbox_auto.u' method="post">
+<form id="invoicebox-pay-form" action='https://go.invoicebox.ru/module_inbox_auto.u' method="post">
 
  <input type="hidden" name="itransfer_participant_id" value="<?php echo $itransfer_participant_id; ?>" />
    <input type="hidden" name="itransfer_participant_ident" value="<?php echo $itransfer_participant_ident; ?>" />
@@ -103,15 +103,13 @@ $address = new Address($cart->id_address_delivery);
    
 
 	<p>
-		<img src="/modules/invoicebox/invoicebox.png" alt="Оплата через InvoiceBox" />
-		
-		</p>
-		<p>
-		Вы выбрали оплату через InvoiceBox
-		
+        <img src="/modules/invoicebox/invoicebox.png" alt="Оплата через InvoiceBox" />
+    </p>
+	<p>
+		Вы выбрали оплату через InvoiceBox		
 	</p>
 	<p>
-		<b>Пожалуйста, подтвердите заказ, нажав кнопку 'Подтверждаю заказ'</b>
+		<b>В течение нескольких секунд произойдет редирект, если этого не произойдет, пожалуйста, подтвердите заказ, нажав кнопку 'Подтверждаю заказ'</b>
 	</p>
 	
 	<p class="cart_navigation">
@@ -119,6 +117,9 @@ $address = new Address($cart->id_address_delivery);
 	</p>
 
 </form>
+<script type="text/javascript">
+            document.getElementById('invoicebox-pay-form').submit();
+        </script>
 <?php
 
 include(dirname(__FILE__).'/../../footer.php');
