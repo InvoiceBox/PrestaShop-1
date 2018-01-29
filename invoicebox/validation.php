@@ -8,9 +8,9 @@ include(dirname(__FILE__) . '/invoicebox.php');
 
 $invoicebox = new Invoicebox();
 
-$language = new Language($cart->id_lang);
 $secureCart = explode('_', $_POST['cartId']);
 $cart = new Cart((int)($secureCart[0]));
+$language = new Language($cart->id_lang);
 $customer = new Customer((int)$cart->id_customer);
 
 $invoicebox->validateOrder((int)($secureCart[0]), Configuration::get('PS_OS_BANKWIRE'), (float)($_POST['amount']), $invoicebox->displayName, 'Waiting of payment', array(), NULL, false, $customer->secure_key);
@@ -18,7 +18,6 @@ $invoicebox->validateOrder((int)($secureCart[0]), Configuration::get('PS_OS_BANK
 $order_id = Order::getOrderByCartId($cart->id);
 $order = new Order($order_id);
 $order_id =$order->id;
-
 include(dirname(__FILE__).'/../../header.php');
 
 $context = Context::getContext();
@@ -35,6 +34,12 @@ $itransfer_testmode = $invoicebox->itransfer_testmode;
 
 $amount = number_format($cart->getOrderTotal(true, 3), 2, '.', '');
 
+$total = number_format($cart->getOrderTotal(true, 4), 2, '.', '');
+
+$subtotal = number_format($cart->getOrderTotal(true, 1), 2, '.', '');
+
+$kcup = $total / $subtotal;
+    
 $shipping_cost = number_format($cart->getOrderTotal(true, 5), 2, '.', '');
 
 $currency_code = $currency->iso_code;
@@ -83,7 +88,7 @@ $address = new Address($cart->id_address_delivery);
     $i++;?>
    <input type="hidden" name="itransfer_item<?php echo $i; ?>_name" value="<?php echo $product['name']; ?>" />
    <input type="hidden" name="itransfer_item<?php echo $i; ?>_quantity" value="<?php echo $product['quantity']; ?>" />
-   <input type="hidden" name="itransfer_item<?php echo $i; ?>_price" value="<?php echo $product['total_wt']; ?>" />
+   <input type="hidden" name="itransfer_item<?php echo $i; ?>_price" value="<?php echo $product['total_wt']*$kcup/$product['quantity']; ?>" />
    <input type="hidden" name="itransfer_item<?php echo $i; ?>_vatrate" value="<?php echo $product['rate']; ?>" />
    <input type="hidden" name="itransfer_item<?php echo $i; ?>_measure" value="шт." />
     <?php 
